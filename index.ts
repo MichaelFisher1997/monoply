@@ -5,6 +5,7 @@ const gameManager = GameManager.getInstance();
 const defaultRoom = gameManager.createRoom("default");
 
 const server = Bun.serve<{ roomId: string }>({
+  hostname: "0.0.0.0",
   port: 3000,
   routes: {
     "/": indexHtml,
@@ -88,4 +89,4 @@ defaultRoom.subscribe((state) => {
   server.publish("default", JSON.stringify({ type: "STATE_UPDATE", state }));
 });
 
-console.log("Server running on http://localhost:3000");
+console.log("Server running on http://0.0.0.0:3000");

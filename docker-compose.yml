@@ -1,8 +1,10 @@
 services:
   monopoly:
     build: .
-    ports:
-      - "3000:3000"
+    networks:
+      monopoly-net:
+        aliases:
+          - monopoly-app
     volumes:
       - ./src:/app/src
       - ./index.ts:/app/index.ts
@@ -13,3 +15,36 @@ services:
       - NODE_ENV=development
     command: bun --hot run ./index.ts
     restart: unless-stopped
+
+  tailscale:
+    image: tailscale/tailscale:latest
+    container_name: monopoly-tailscale
+    hostname: ${TS_HOSTNAME:-monopoly}
+    depends_on:
+      - monopoly
+    networks:
+      - monopoly-net
+    environment:
+      - TS_AUTHKEY=${TS_AUTHKEY}
+      - TS_STATE_DIR=/var/lib/tailscale
+      - TS_USERSPACE=false
+      - TS_AUTH_ONCE=true
+    volumes:
+      - tailscale-state:/var/lib/tailscale
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    cap_add:
+      - NET_ADMIN
+    command: >
+      sh -c "tailscaled &
+        sleep 5 &&
+        tailscale up --authkey=$${TS_AUTHKEY} &&
+        tailscale funnel --bg --https 443 http://monopoly-app:3000 &&
+        tail -f /dev/null"
+    restart: unless-stopped
+
+networks:
+  monopoly-net:
+
+volumes:
+  tailscale-state:
