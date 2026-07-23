@@ -56,6 +56,9 @@ export interface Player {
   bankrupt: boolean;
   color: string;
   isAI: boolean;
+  clientId?: string; // Unique ID for multiplayer identity
+  lastTradeTurn?: number; // Turn number when they last proposed a trade
+  tradeHistory?: Record<string, { attempts: number; lastOffer: number }>; // Key: "playerId-propertyId"
 }
 
 export type CardType = "chance" | "community_chest";
@@ -89,6 +92,7 @@ export type DiceRoll = {
 
 export type GamePhase =
   | "setup"
+  | "lobby"
   | "rolling"
   | "moving"
   | "resolving_space"
@@ -144,11 +148,13 @@ export interface GameState {
   diceRoll?: DiceRoll;
   consecutiveDoubles: number;
   phase: GamePhase;
+  turn: number; // Current turn number
   winner?: number;
   lastDiceRoll?: DiceRoll;
   passedGo: boolean;
   auction?: AuctionState;
   trade?: TradeState;
+  previousPhase?: GamePhase;
   lastCardDrawn?: Card;
   gameLog: GameLogEntry[];
 }

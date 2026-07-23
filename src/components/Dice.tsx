@@ -12,6 +12,9 @@ export const Dice: React.FC<DiceProps> = ({ onRollComplete, autoRoll = true }) =
   const [displayDie1, setDisplayDie1] = React.useState(1);
   const [displayDie2, setDisplayDie2] = React.useState(1);
   const [finalRoll, setFinalRoll] = React.useState<{ die1: number; die2: number; total: number; isDoubles: boolean } | null>(null);
+  
+  const currentRoll = useGameStore((s) => s.diceRoll);
+  const rollDiceAction = useGameStore((s) => s.rollDice);
 
   // Auto-roll on mount if autoRoll is true
   React.useEffect(() => {
@@ -19,6 +22,21 @@ export const Dice: React.FC<DiceProps> = ({ onRollComplete, autoRoll = true }) =
       startRoll();
     }
   }, []);
+
+  // React to server roll update
+  React.useEffect(() => {
+    if (rolling && currentRoll) {
+      // Server responded!
+      setDisplayDie1(currentRoll.die1);
+      setDisplayDie2(currentRoll.die2);
+      setFinalRoll(currentRoll);
+      setRolling(false);
+      
+      setTimeout(() => {
+        onRollComplete?.();
+      }, 500);
+    }
+  }, [currentRoll, rolling]);
 
   // Animate through random values during roll
   React.useEffect(() => {
@@ -35,20 +53,7 @@ export const Dice: React.FC<DiceProps> = ({ onRollComplete, autoRoll = true }) =
   const startRoll = () => {
     setRolling(true);
     setFinalRoll(null);
-    
-    // Roll after animation
-    setTimeout(() => {
-      const roll = useGameStore.getState().rollDice();
-      setDisplayDie1(roll.die1);
-      setDisplayDie2(roll.die2);
-      setFinalRoll(roll);
-      setRolling(false);
-      
-      // Small delay before completing
-      setTimeout(() => {
-        onRollComplete?.();
-      }, 500);
-    }, 800);
+    rollDiceAction();
   };
 
   const dieFaces: Record<number, string> = {
@@ -75,16 +80,18 @@ export const Dice: React.FC<DiceProps> = ({ onRollComplete, autoRoll = true }) =
       style={{
         width: "70px",
         height: "70px",
-        backgroundColor: "#fff",
-        border: "3px solid #333",
-        borderRadius: "12px",
+        backgroundColor: "var(--ivory)",
+        border: "2px solid var(--gold-dark)",
+        borderRadius: "8px",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        fontSize: "52px",
+        fontSize: "64px",
+        color: "var(--obsidian)",
+        lineHeight: 1,
         boxShadow: rolling 
-          ? "0 8px 20px rgba(0,0,0,0.4)" 
-          : "0 4px 12px rgba(0,0,0,0.2)",
+          ? "0 10px 30px rgba(212,175,55,0.4)" 
+          : "inset 0 0 10px rgba(0,0,0,0.1), 0 4px 12px rgba(0,0,0,0.5)",
         transformStyle: "preserve-3d",
       }}
     >
@@ -98,10 +105,10 @@ export const Dice: React.FC<DiceProps> = ({ onRollComplete, autoRoll = true }) =
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        gap: "16px",
+        gap: "20px",
       }}
     >
-      <div style={{ display: "flex", gap: "16px" }}>
+      <div style={{ display: "flex", gap: "20px" }}>
         {renderDie(displayDie1, 0)}
         {renderDie(displayDie2, 1)}
       </div>
@@ -111,21 +118,23 @@ export const Dice: React.FC<DiceProps> = ({ onRollComplete, autoRoll = true }) =
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           style={{
-            fontSize: "20px",
-            fontWeight: "bold",
-            color: finalRoll.isDoubles ? "#4CAF50" : "#fff",
-            marginTop: "8px",
+            fontSize: "22px",
+            fontFamily: "var(--font-heading)",
+            color: finalRoll.isDoubles ? "var(--gold-primary)" : "var(--ivory)",
+            marginTop: "12px",
+            letterSpacing: "2px",
+            textTransform: "uppercase"
           }}
         >
           {finalRoll.isDoubles 
-            ? `Doubles! ${finalRoll.total}` 
-            : `Rolled: ${finalRoll.die1} + ${finalRoll.die2} = ${finalRoll.total}`}
+            ? `DOUBLES: ${finalRoll.total}` 
+            : `ROLL: ${finalRoll.total}`}
         </motion.div>
       )}
       
       {rolling && (
-        <div style={{ color: "#ccc", fontSize: "14px" }}>
-          Rolling...
+        <div style={{ color: "var(--gold-dark)", fontSize: "14px", letterSpacing: "2px" }}>
+          CASTING DICE...
         </div>
       )}
     </div>
@@ -144,28 +153,30 @@ export const DiceDisplay: React.FC = () => {
 
   return (
     <motion.div
+      className="deco-border"
       initial={{ opacity: 0, scale: 0.8 }}
       animate={{ opacity: 1, scale: 1 }}
       style={{
         display: "flex",
-        gap: "8px",
+        gap: "12px",
         alignItems: "center",
         justifyContent: "center",
-        padding: "8px 16px",
-        backgroundColor: "rgba(0,0,0,0.3)",
-        borderRadius: "8px",
+        padding: "12px 24px",
+        backgroundColor: "var(--charcoal)",
+        borderRadius: "2px",
       }}
     >
-      <span style={{ fontSize: "32px" }}>{dieFaces[diceRoll.die1]}</span>
-      <span style={{ fontSize: "32px" }}>{dieFaces[diceRoll.die2]}</span>
+      <span style={{ fontSize: "36px", color: "var(--ivory)", lineHeight: 1 }}>{dieFaces[diceRoll.die1]}</span>
+      <span style={{ fontSize: "36px", color: "var(--ivory)", lineHeight: 1 }}>{dieFaces[diceRoll.die2]}</span>
       <span style={{ 
-        fontSize: "16px", 
-        fontWeight: "bold",
-        color: diceRoll.isDoubles ? "#4CAF50" : "#fff",
-        marginLeft: "8px",
+        fontSize: "18px", 
+        fontFamily: "var(--font-heading)",
+        color: diceRoll.isDoubles ? "var(--gold-primary)" : "var(--ivory)",
+        marginLeft: "12px",
+        letterSpacing: "1px"
       }}>
         = {diceRoll.total}
-        {diceRoll.isDoubles && " (Doubles!)"}
+        {diceRoll.isDoubles && " (DOUBLES)"}
       </span>
     </motion.div>
   );

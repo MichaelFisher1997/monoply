@@ -1,6 +1,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { useGameStore } from "../store/gameStore";
+import { useLocalStore } from "../store/localStore";
 import type { TradeState, Player, Space, Property, TradeOffer } from "../types/game";
 
 interface Props {
@@ -10,6 +11,7 @@ interface Props {
 }
 
 export const TradeModal: React.FC<Props> = ({ trade, players, spaces }) => {
+  const { myPlayerIndex } = useLocalStore();
   const { 
     updateTradeOffer, 
     proposeTrade, 
@@ -24,27 +26,42 @@ export const TradeModal: React.FC<Props> = ({ trade, players, spaces }) => {
   const toPlayer = players[offer.toPlayer]!;
   
   // Who is viewing the modal?
-  const humanPlayerIndex = players.findIndex((p: Player) => !p.isAI);
-  const isInitiator = humanPlayerIndex === offer.fromPlayer;
-  const isReceiver = humanPlayerIndex === offer.toPlayer;
+  const isInitiator = myPlayerIndex === offer.fromPlayer;
+  const isReceiver = myPlayerIndex === offer.toPlayer;
   
   const fromPlayerOwnedProps = getPlayerProperties(offer.fromPlayer).filter(p => p.houses === 0 && !p.hotel);
   const toPlayerOwnedProps = getPlayerProperties(offer.toPlayer).filter(p => p.houses === 0 && !p.hotel);
 
   const handleToggleProperty = (propId: number, side: "from" | "to") => {
-    if (status !== "draft") return;
+    console.log("handleToggleProperty called:", { propId, side, status });
+    if (status !== "draft") {
+      console.log("Not in draft status, returning");
+      return;
+    }
     
     const newOffer = { ...offer };
+    // Ensure arrays exist
+    const currentOffered = offer.propertiesOffered || [];
+    const currentRequested = offer.propertiesRequested || [];
+    
+    console.log("Current state:", { currentOffered, currentRequested });
+    
     if (side === "from") {
-      newOffer.propertiesOffered = offer.propertiesOffered.includes(propId)
-        ? offer.propertiesOffered.filter(id => id !== propId)
-        : [...offer.propertiesOffered, propId];
+      const isAlreadySelected = currentOffered.includes(propId);
+      newOffer.propertiesOffered = isAlreadySelected
+        ? currentOffered.filter(id => id !== propId)
+        : [...currentOffered, propId];
+      console.log("Updated propertiesOffered:", newOffer.propertiesOffered);
     } else {
-      newOffer.propertiesRequested = offer.propertiesRequested.includes(propId)
-        ? offer.propertiesRequested.filter(id => id !== propId)
-        : [...offer.propertiesRequested, propId];
+      const isAlreadySelected = currentRequested.includes(propId);
+      newOffer.propertiesRequested = isAlreadySelected
+        ? currentRequested.filter(id => id !== propId)
+        : [...currentRequested, propId];
+      console.log("Updated propertiesRequested:", newOffer.propertiesRequested);
     }
+    
     updateTradeOffer(newOffer);
+    console.log("updateTradeOffer called");
   };
 
   const handleCashChange = (amount: number, side: "from" | "to") => {
@@ -57,6 +74,21 @@ export const TradeModal: React.FC<Props> = ({ trade, players, spaces }) => {
 
   const getPropertyName = (id: number) => {
     return spaces.find(s => s.id === id)?.name ?? `Prop #${id}`;
+  };
+
+  const handlePropose = () => {
+    // Safety check for gifting
+    const isGift = 
+      offer.cashRequested === 0 && 
+      (offer.propertiesRequested || []).length === 0 && 
+      offer.jailCardsRequested === 0;
+
+    if (isGift) {
+      if (!confirm("⚠️ You are offering a gift (receiving nothing in return).\n\nAre you sure you want to proceed?")) {
+        return;
+      }
+    }
+    proposeTrade(offer);
   };
 
   return (
@@ -106,24 +138,35 @@ export const TradeModal: React.FC<Props> = ({ trade, players, spaces }) => {
               <div>
                 <label style={{ fontSize: "12px", display: "block", marginBottom: "4px" }}>Properties to Offer:</label>
                 <div style={{ display: "flex", flexDirection: "column", gap: "4px", maxHeight: "200px", overflowY: "auto", padding: "8px", background: "#111", borderRadius: "8px" }}>
-                  {fromPlayerOwnedProps.map((prop: Property) => (
-                    <div 
-                      key={prop.id}
-                      onClick={() => handleToggleProperty(prop.id, "from")}
-                      style={{ 
-                        padding: "6px 10px", 
-                        fontSize: "12px", 
-                        background: offer.propertiesOffered.includes(prop.id) ? "#2E8B57" : "#222",
-                        borderRadius: "4px",
-                        cursor: "pointer",
-                        display: "flex",
-                        justifyContent: "space-between"
-                      }}
-                    >
-                      {prop.name}
-                      {offer.propertiesOffered.includes(prop.id) && <span>✓</span>}
-                    </div>
-                  ))}
+                  {fromPlayerOwnedProps.map((prop: Property) => {
+                    const isSelected = (offer.propertiesOffered || []).includes(prop.id);
+                    return (
+                      <motion.div 
+                        key={prop.id}
+                        onClick={() => {
+                          console.log("Clicked property:", prop.id, "from");
+                          handleToggleProperty(prop.id, "from");
+                        }}
+                        whileHover={{ scale: 1.02, backgroundColor: isSelected ? "#3da369" : "#333" }}
+                        whileTap={{ scale: 0.98 }}
+                        style={{ 
+                          padding: "8px 12px", 
+                          fontSize: "12px", 
+                          background: isSelected ? "#2E8B57" : "#222",
+                          borderRadius: "4px",
+                          cursor: "pointer",
+                          display: "flex",
+                          justifyContent: "space-between",
+                          alignItems: "center",
+                          border: isSelected ? "1px solid #4CAF50" : "1px solid transparent",
+                          userSelect: "none"
+                        }}
+                      >
+                        <span>{prop.name}</span>
+                        {isSelected && <span style={{ color: "#fff", fontWeight: "bold" }}>✓</span>}
+                      </motion.div>
+                    );
+                  })}
                   {fromPlayerOwnedProps.length === 0 && <div style={{ fontSize: "11px", opacity: 0.5, textAlign: "center" }}>No tradable properties</div>}
                 </div>
               </div>
@@ -131,7 +174,7 @@ export const TradeModal: React.FC<Props> = ({ trade, players, spaces }) => {
           ) : (
             <div style={{ padding: "16px", background: "rgba(255,255,255,0.05)", borderRadius: "8px" }}>
               {offer.cashOffered > 0 && <p>£{offer.cashOffered.toLocaleString()}</p>}
-              {offer.propertiesOffered.map(id => <p key={id}>• {getPropertyName(id)}</p>)}
+              {(offer.propertiesOffered || []).map(id => <p key={id}>• {getPropertyName(id)}</p>)}
               {offer.cashOffered === 0 && offer.propertiesOffered.length === 0 && <p style={{ fontStyle: "italic", opacity: 0.5 }}>Nothing</p>}
             </div>
           )}
@@ -161,24 +204,35 @@ export const TradeModal: React.FC<Props> = ({ trade, players, spaces }) => {
               <div>
                 <label style={{ fontSize: "12px", display: "block", marginBottom: "4px" }}>Properties to Request:</label>
                 <div style={{ display: "flex", flexDirection: "column", gap: "4px", maxHeight: "200px", overflowY: "auto", padding: "8px", background: "#111", borderRadius: "8px" }}>
-                  {toPlayerOwnedProps.map((prop: Property) => (
-                    <div 
-                      key={prop.id}
-                      onClick={() => handleToggleProperty(prop.id, "to")}
-                      style={{ 
-                        padding: "6px 10px", 
-                        fontSize: "12px", 
-                        background: offer.propertiesRequested.includes(prop.id) ? "#2E8B57" : "#222",
-                        borderRadius: "4px",
-                        cursor: "pointer",
-                        display: "flex",
-                        justifyContent: "space-between"
-                      }}
-                    >
-                      {prop.name}
-                      {offer.propertiesRequested.includes(prop.id) && <span>✓</span>}
-                    </div>
-                  ))}
+                  {toPlayerOwnedProps.map((prop: Property) => {
+                    const isSelected = (offer.propertiesRequested || []).includes(prop.id);
+                    return (
+                      <motion.div 
+                        key={prop.id}
+                        onClick={() => {
+                          console.log("Clicked property:", prop.id, "to");
+                          handleToggleProperty(prop.id, "to");
+                        }}
+                        whileHover={{ scale: 1.02, backgroundColor: isSelected ? "#3da369" : "#333" }}
+                        whileTap={{ scale: 0.98 }}
+                        style={{ 
+                          padding: "8px 12px", 
+                          fontSize: "12px", 
+                          background: isSelected ? "#2E8B57" : "#222",
+                          borderRadius: "4px",
+                          cursor: "pointer",
+                          display: "flex",
+                          justifyContent: "space-between",
+                          alignItems: "center",
+                          border: isSelected ? "1px solid #4CAF50" : "1px solid transparent",
+                          userSelect: "none"
+                        }}
+                      >
+                        <span>{prop.name}</span>
+                        {isSelected && <span style={{ color: "#fff", fontWeight: "bold" }}>✓</span>}
+                      </motion.div>
+                    );
+                  })}
                   {toPlayerOwnedProps.length === 0 && <div style={{ fontSize: "11px", opacity: 0.5, textAlign: "center" }}>No tradable properties</div>}
                 </div>
               </div>
@@ -186,8 +240,8 @@ export const TradeModal: React.FC<Props> = ({ trade, players, spaces }) => {
           ) : (
             <div style={{ padding: "16px", background: "rgba(255,255,255,0.05)", borderRadius: "8px" }}>
               {offer.cashRequested > 0 && <p>£{offer.cashRequested.toLocaleString()}</p>}
-              {offer.propertiesRequested.map(id => <p key={id}>• {getPropertyName(id)}</p>)}
-              {offer.cashRequested === 0 && offer.propertiesRequested.length === 0 && <p style={{ fontStyle: "italic", opacity: 0.5 }}>Nothing</p>}
+              {(offer.propertiesRequested || []).map(id => <p key={id}>• {getPropertyName(id)}</p>)}
+              {offer.cashRequested === 0 && (offer.propertiesRequested || []).length === 0 && <p style={{ fontStyle: "italic", opacity: 0.5 }}>Nothing</p>}
             </div>
           )}
         </div>
@@ -199,7 +253,7 @@ export const TradeModal: React.FC<Props> = ({ trade, players, spaces }) => {
           <>
             <motion.button 
               whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}
-              onClick={() => proposeTrade(offer)}
+              onClick={handlePropose}
               style={{ padding: "12px 40px", background: "#4CAF50", border: "none", color: "#fff", borderRadius: "8px", cursor: "pointer", fontWeight: "bold" }}
             >
               Propose Trade
