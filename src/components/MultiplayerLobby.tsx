@@ -36,67 +36,65 @@ export const MultiplayerLobby = () => {
         alignItems: "center",
         justifyContent: "center",
         minHeight: "100vh",
-        backgroundColor: "#1a1a2a",
+        background: "transparent",
         padding: "40px",
         gap: "24px",
-        color: "#fff",
+        color: "var(--ivory)",
       }}
     >
       <motion.div
+        className="deco-modal deco-border"
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         style={{
-          backgroundColor: "rgba(255, 255, 255, 0.1)",
-          borderRadius: "16px",
           padding: "40px",
-          boxShadow: "0 8px 32px rgba(0, 0, 0, 0.3)",
           textAlign: "center",
           maxWidth: "600px",
           width: "100%",
         }}
       >
         <button
+          className="button"
           onClick={leaveRoom}
           style={{
             position: "absolute",
-            top: "20px",
-            left: "20px",
-            background: "none",
-            border: "none",
-            fontSize: "24px",
-            color: "#fff",
-            cursor: "pointer",
+            top: "16px",
+            left: "16px",
+            fontSize: "14px",
+            padding: "8px 16px",
           }}
         >
-          ← Leave
+          LEAVE
         </button>
 
-        <h1 style={{ fontSize: "32px", color: "#4ECDC4", marginBottom: "24px" }}>
-          Game Lobby
+        <h1 className="deco-title" style={{ fontSize: "32px", marginBottom: "24px", marginTop: "20px" }}>
+          The Waiting Room
         </h1>
 
         <div style={{ marginBottom: "32px" }}>
-          <h3 style={{ marginBottom: "16px" }}>Players ({players.length}/8)</h3>
-          <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+          <h3 className="deco-title" style={{ marginBottom: "16px", fontSize: "18px" }}>Guests ({players.length}/8)</h3>
+          <div style={{ display: "flex", flexDirection: "column", gap: "12px", maxHeight: "200px", overflowY: "auto", paddingRight: "4px" }}>
             {players.length === 0 ? (
-              <div style={{ fontStyle: "italic", color: "#aaa" }}>Waiting for players...</div>
+              <div style={{ fontStyle: "italic", color: "var(--gold-dark)", fontFamily: "var(--font-heading)", letterSpacing: "1px" }}>Awaiting arrivals...</div>
             ) : (
               players.map((p) => (
                 <div 
                   key={p.id}
                   style={{ 
-                    padding: "12px", 
-                    background: "rgba(0,0,0,0.2)", 
-                    borderRadius: "8px",
+                    padding: "16px", 
+                    background: "var(--charcoal)", 
+                    borderRadius: "2px",
+                    border: "1px solid var(--gold-dark)",
+                    borderLeft: "2px solid var(--gold-primary)",
                     display: "flex",
                     alignItems: "center",
                     gap: "12px"
                   }}
                 >
-                  <span style={{ fontSize: "24px" }}>{p.token}</span>
-                  <span style={{ fontWeight: "bold" }}>{p.name}</span>
-                  {p.clientId === clientId && <span style={{ color: "#4ECDC4" }}>(You)</span>}
-                  {p.id === 0 && <span style={{ color: "#FFD700" }}>👑 Host</span>}
+                  <span style={{ fontSize: "24px", filter: "drop-shadow(0 2px 2px rgba(0,0,0,0.5))" }}>{p.token}</span>
+                  <span style={{ fontWeight: "500", fontFamily: "var(--font-heading)", letterSpacing: "1px", color: "var(--ivory)", fontSize: "18px" }}>{p.name}</span>
+                  {p.clientId === clientId && <span style={{ color: "var(--gold-light)", fontFamily: "var(--font-body)", fontSize: "12px", letterSpacing: "1px" }}>(You)</span>}
+                  {p.id === 0 && <span style={{ color: "var(--gold-primary)", fontFamily: "var(--font-body)", fontSize: "12px", letterSpacing: "1px", marginLeft: "auto" }}>👑 HOST</span>}
                 </div>
               ))
             )}
@@ -104,31 +102,32 @@ export const MultiplayerLobby = () => {
         </div>
 
         {!myPlayer ? (
-          <div style={{ borderTop: "1px solid rgba(255,255,255,0.1)", paddingTop: "24px" }}>
-            <h3 style={{ marginBottom: "16px" }}>Join Game</h3>
-            <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+          <div style={{ borderTop: "1px solid var(--gold-dark)", paddingTop: "24px" }}>
+            <h3 className="deco-title" style={{ marginBottom: "16px", fontSize: "20px" }}>Join the Table</h3>
+            <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
               <input
                 type="text"
-                placeholder="Your Name"
+                placeholder="Your Alias"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                style={{ padding: "12px", borderRadius: "8px", border: "none" }}
+                style={{ width: "100%", boxSizing: "border-box" }}
               />
               
               <div>
-                <label style={{ display: "block", marginBottom: "8px", textAlign: "left" }}>Choose Token:</label>
-                <div style={{ display: "flex", gap: "8px", flexWrap: "wrap", justifyContent: "center" }}>
+                <label style={{ display: "block", marginBottom: "12px", textAlign: "left", color: "var(--ivory)", fontFamily: "var(--font-body)", letterSpacing: "1px", fontSize: "12px", textTransform: "uppercase" }}>Select Token:</label>
+                <div style={{ display: "flex", gap: "12px", flexWrap: "wrap", justifyContent: "center" }}>
                   {TOKENS.map((t) => (
                     <button
                       key={t}
                       onClick={() => setToken(t)}
                       style={{
                         fontSize: "24px",
-                        padding: "8px",
-                        borderRadius: "8px",
-                        border: token === t ? "2px solid #4ECDC4" : "1px solid transparent",
-                        backgroundColor: token === t ? "rgba(78, 205, 196, 0.2)" : "rgba(255,255,255,0.1)",
+                        padding: "12px",
+                        borderRadius: "2px",
+                        border: token === t ? "2px solid var(--gold-primary)" : "1px solid var(--gold-dark)",
+                        backgroundColor: token === t ? "var(--charcoal)" : "var(--obsidian)",
                         cursor: "pointer",
+                        filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.5))"
                       }}
                     >
                       {t}
@@ -138,49 +137,42 @@ export const MultiplayerLobby = () => {
               </div>
 
               <motion.button
+                className="button action-button"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={handleJoin}
                 disabled={!name || !token}
                 style={{
                   padding: "16px",
-                  fontSize: "18px",
-                  fontWeight: "bold",
-                  backgroundColor: name && token ? "#4169E1" : "#666",
-                  color: "#fff",
-                  border: "none",
-                  borderRadius: "8px",
-                  cursor: name && token ? "pointer" : "not-allowed",
+                  fontSize: "16px",
+                  width: "100%",
                   marginTop: "16px",
+                  opacity: (!name || !token) ? 0.5 : 1
                 }}
               >
-                Join Game
+                JOIN TABLE
               </motion.button>
             </div>
           </div>
         ) : (
-          <div>
+          <div style={{ marginTop: "24px" }}>
             {isHost ? (
               <motion.button
+                className="button action-button"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={startGame}
                 disabled={players.length < 2}
                 style={{
                   padding: "16px 48px",
-                  fontSize: "20px",
-                  fontWeight: "bold",
-                  backgroundColor: players.length >= 2 ? "#4CAF50" : "#666",
-                  color: "#fff",
-                  border: "none",
-                  borderRadius: "8px",
-                  cursor: players.length >= 2 ? "pointer" : "not-allowed",
+                  fontSize: "18px",
+                  opacity: players.length < 2 ? 0.5 : 1
                 }}
               >
-                Start Game
+                START GAME
               </motion.button>
             ) : (
-              <div style={{ color: "#aaa" }}>Waiting for host to start...</div>
+              <div style={{ color: "var(--gold-dark)", fontFamily: "var(--font-heading)", fontStyle: "italic", letterSpacing: "1px" }}>Waiting for host to commence...</div>
             )}
           </div>
         )}

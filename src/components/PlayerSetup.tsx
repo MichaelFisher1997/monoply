@@ -134,85 +134,72 @@ const PlayerSetup = () => {
           alignItems: "center",
           justifyContent: "center",
           minHeight: "100vh",
-          backgroundColor: "#1a1a2a",
+          background: "transparent",
           padding: "40px",
           gap: "24px",
         }}
       >
         <motion.div
+          className="deco-modal deco-border"
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           style={{
-            backgroundColor: "rgba(255, 255, 255, 0.95)",
-            borderRadius: "16px",
             padding: "48px",
-            boxShadow: "0 8px 32px rgba(0, 0, 0, 0.3)",
             textAlign: "center",
             maxWidth: "500px",
+            width: "100%",
           }}
         >
           <h1
+            className="deco-title"
             style={{
               fontSize: "42px",
-              color: "#2E8B57",
-              marginBottom: "8px",
-              fontWeight: 700,
+              marginBottom: "16px",
             }}
           >
-            Monopoly
+            THE GRAND
+            <div style={{ fontSize: "20px", color: "var(--ivory)", marginTop: "8px", fontFamily: "var(--font-body)", letterSpacing: "8px" }}>MONOPOLY</div>
           </h1>
-          <p style={{ color: "#666", marginBottom: "32px", fontSize: "16px" }}>
-            Choose your game mode
+          <p style={{ color: "var(--gold-dark)", marginBottom: "40px", fontSize: "16px", fontStyle: "italic", fontFamily: "var(--font-heading)", letterSpacing: "1px" }}>
+            Select your preferred experience
           </p>
 
-          <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+          <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
             <motion.button
+              className="button"
               onClick={() => setGameMode("single")}
-              whileHover={{ scale: 1.02 }}
+              whileHover={{ scale: 1.02, borderColor: "var(--gold-primary)", boxShadow: "0 0 15px rgba(212,175,55,0.2)" }}
               whileTap={{ scale: 0.98 }}
               style={{
                 padding: "20px 40px",
                 fontSize: "18px",
-                fontWeight: 600,
-                backgroundColor: "#2E8B57",
-                color: "#fff",
-                border: "none",
-                borderRadius: "12px",
-                cursor: "pointer",
-                boxShadow: "0 4px 12px rgba(46, 139, 87, 0.4)",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                gap: "12px",
+                gap: "16px",
               }}
             >
-              <span style={{ fontSize: "24px" }}>🎮</span>
-              Single Player
+              <span style={{ fontSize: "24px" }}>👤</span>
+              Private Table
             </motion.button>
 
             <motion.button
+              className="button"
               onClick={() => setGameMode("multiplayer")}
-              whileHover={{ scale: 1.02 }}
+              whileHover={{ scale: 1.02, borderColor: "var(--gold-primary)", boxShadow: "0 0 15px rgba(212,175,55,0.2)" }}
               whileTap={{ scale: 0.98 }}
               style={{
                 padding: "20px 40px",
                 fontSize: "18px",
-                fontWeight: 600,
-                backgroundColor: "#4169E1",
-                color: "#fff",
-                border: "none",
-                borderRadius: "12px",
-                cursor: "pointer",
-                boxShadow: "0 4px 12px rgba(65, 105, 225, 0.4)",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                gap: "12px",
+                gap: "16px",
               }}
             >
               <span style={{ fontSize: "24px" }}>👥</span>
-              Multiplayer
+              High Roller Suite
             </motion.button>
           </div>
         </motion.div>
@@ -230,88 +217,84 @@ const PlayerSetup = () => {
           alignItems: "center",
           justifyContent: "center",
           minHeight: "100vh",
-          backgroundColor: "#1a1a2a",
-          padding: "40px",
-          gap: "24px",
+          background: "transparent",
+          padding: "20px",
+          gap: "16px",
+          overflow: "auto",
         }}
       >
         <motion.div
+          className="deco-modal deco-border"
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           style={{
-            backgroundColor: "rgba(255, 255, 255, 0.95)",
-            borderRadius: "16px",
-            padding: "40px",
-            boxShadow: "0 8px 32px rgba(0, 0, 0, 0.3)",
+            padding: "24px",
             textAlign: "center",
-            maxWidth: "550px",
+            maxWidth: "700px",
             width: "100%",
+            maxHeight: "95vh",
+            overflowY: "auto",
           }}
         >
           <button
+            className="button"
             onClick={() => setGameMode("select")}
             style={{
               position: "absolute",
-              top: "16px",
-              left: "16px",
-              background: "none",
-              border: "none",
-              fontSize: "24px",
-              cursor: "pointer",
-              padding: "8px",
+              top: "12px",
+              left: "12px",
+              fontSize: "12px",
+              padding: "6px 12px",
             }}
           >
-            ←
+            BACK
           </button>
 
           <h1
+            className="deco-title"
             style={{
-              fontSize: "28px",
-              color: "#2E8B57",
-              marginBottom: "24px",
+              fontSize: "24px",
+              marginBottom: "20px",
+              marginTop: "16px"
             }}
           >
-            Single Player Setup
+            Private Table
           </h1>
 
-          {/* Your setup */}
+          {/* Your setup - Compact */}
           <div
             style={{
-              marginBottom: "24px",
-              padding: "20px",
-              backgroundColor: "#e8f5e9",
-              borderRadius: "12px",
-              border: "2px solid #2E8B57",
+              marginBottom: "16px",
+              padding: "16px",
+              backgroundColor: "var(--charcoal)",
+              borderRadius: "2px",
+              border: "1px solid var(--gold-dark)",
             }}
           >
-            <h3 style={{ marginBottom: "12px", color: "#2E8B57" }}>Your Player</h3>
+            <h3 className="deco-title" style={{ marginBottom: "12px", fontSize: "16px" }}>VIP Guest</h3>
             
-            <div style={{ marginBottom: "16px" }}>
+            <div style={{ marginBottom: "12px" }}>
               <label
                 style={{
                   display: "block",
                   marginBottom: "4px",
-                  fontWeight: "bold",
-                  fontSize: "14px",
+                  fontWeight: "500",
+                  fontSize: "10px",
                   textAlign: "left",
+                  color: "var(--ivory)",
+                  letterSpacing: "1px",
+                  textTransform: "uppercase"
                 }}
               >
-                Name (optional):
+                Alias (Optional):
               </label>
               <input
                 type="text"
                 value={playerName}
                 onChange={(e) => setPlayerName(e.target.value)}
-                placeholder="You"
-                style={{
-                  width: "100%",
-                  padding: "10px",
-                  fontSize: "14px",
-                  borderRadius: "8px",
-                  border: "1px solid #ccc",
-                  boxSizing: "border-box",
-                }}
+                placeholder="High Roller"
+                style={{ width: "100%", boxSizing: "border-box", padding: "6px 10px" }}
               />
             </div>
 
@@ -320,165 +303,157 @@ const PlayerSetup = () => {
                 style={{
                   display: "block",
                   marginBottom: "8px",
-                  fontWeight: "bold",
-                  fontSize: "14px",
+                  fontWeight: "500",
+                  fontSize: "10px",
                   textAlign: "left",
+                  color: "var(--ivory)",
+                  letterSpacing: "1px",
+                  textTransform: "uppercase"
                 }}
               >
-                Choose your token:
+                Select Token:
               </label>
-              <div
-                style={{
-                  display: "flex",
-                  gap: "8px",
-                  flexWrap: "wrap",
-                  justifyContent: "center",
-                }}
-              >
-                {TOKENS.map((token) => {
-                  const isUsedByAI = aiTokens.includes(token);
-                  return (
-                    <motion.button
-                      key={token}
-                      onClick={() => !isUsedByAI && setPlayerToken(token)}
-                      whileHover={{ scale: isUsedByAI ? 1 : 1.1 }}
-                      whileTap={{ scale: isUsedByAI ? 1 : 0.95 }}
-                      style={{
-                        fontSize: "28px",
-                        padding: "10px",
-                        borderRadius: "8px",
-                        border: playerToken === token ? "3px solid #2E8B57" : "2px solid #ddd",
-                        backgroundColor: playerToken === token ? "#c8e6c9" : isUsedByAI ? "#f5f5f5" : "#fff",
-                        cursor: isUsedByAI ? "not-allowed" : "pointer",
-                        opacity: isUsedByAI ? 0.4 : 1,
-                      }}
-                    >
-                      {token}
-                    </motion.button>
-                  );
-                })}
+              <div style={{ display: "flex", gap: "6px", flexWrap: "wrap", justifyContent: "center" }}>
+                {TOKENS.map((token) => (
+                  <motion.button
+                    key={token}
+                    onClick={() => setPlayerToken(token)}
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.95 }}
+                    style={{
+                      fontSize: "20px",
+                      padding: "6px",
+                      width: "40px",
+                      height: "40px",
+                      borderRadius: "2px",
+                      border: playerToken === token ? "2px solid var(--gold-primary)" : "1px solid var(--gold-dark)",
+                      backgroundColor: playerToken === token ? "var(--charcoal)" : "var(--obsidian)",
+                      boxShadow: playerToken === token ? "0 0 12px rgba(212,175,55,0.3)" : "none",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center"
+                    }}
+                  >
+                    {token}
+                  </motion.button>
+                ))}
               </div>
             </div>
           </div>
 
           {/* AI Opponents */}
+          {/* AI Selection - Compact Grid Layout */}
           <div
             style={{
               marginBottom: "24px",
               padding: "20px",
-              backgroundColor: "#fff3e0",
-              borderRadius: "12px",
-              border: "2px solid #FF9800",
+              backgroundColor: "var(--charcoal)",
+              borderRadius: "2px",
+              border: "1px solid var(--gold-dark)",
             }}
           >
-            <h3 style={{ marginBottom: "12px", color: "#E65100" }}>AI Opponents</h3>
+            <h3 className="deco-title" style={{ marginBottom: "12px", fontSize: "18px" }}>The House (AI)</h3>
             
             <div style={{ marginBottom: "16px" }}>
               <label
                 style={{
                   display: "block",
-                  marginBottom: "4px",
-                  fontWeight: "bold",
-                  fontSize: "14px",
+                  marginBottom: "6px",
+                  fontWeight: "500",
+                  fontSize: "11px",
+                  textAlign: "left",
+                  color: "var(--ivory)",
+                  letterSpacing: "1px",
+                  textTransform: "uppercase"
                 }}
               >
-                Number of AI players:
+                Opponents:
               </label>
               <select
                 value={aiCount}
                 onChange={handleAiCountChange}
-                style={{
-                  padding: "10px 16px",
-                  fontSize: "16px",
-                  borderRadius: "8px",
-                  border: "2px solid #ddd",
-                  width: "100%",
-                  boxSizing: "border-box",
-                }}
+                style={{ width: "100%", boxSizing: "border-box", backgroundColor: "var(--obsidian)", padding: "8px" }}
               >
                 {[1, 2, 3, 4, 5, 6, 7].map((num) => (
                   <option key={num} value={num}>
-                    {num} AI Opponent{num > 1 ? "s" : ""}
+                    {num} House Player{num > 1 ? "s" : ""}
                   </option>
                 ))}
               </select>
             </div>
 
-            <AnimatePresence>
-              {Array.from({ length: aiCount }).map((_, index) => (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: "auto" }}
-                  exit={{ opacity: 0, height: 0 }}
-                  style={{
-                    marginBottom: "12px",
-                    padding: "12px",
-                    backgroundColor: "#fff",
-                    borderRadius: "8px",
-                    border: "1px solid #ddd",
-                  }}
-                >
-                  <div
+            {/* Compact AI Grid */}
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "8px" }}>
+              <AnimatePresence>
+                {Array.from({ length: aiCount }).map((_, index) => (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.9 }}
                     style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "12px",
+                      padding: "10px",
+                      backgroundColor: "var(--obsidian)",
+                      border: "1px solid var(--gold-dark)",
+                      borderRadius: "2px",
                     }}
                   >
-                    <span style={{ fontWeight: "bold", fontSize: "14px", minWidth: "80px" }}>
-                      {AI_NAMES[index] ?? `Bot ${index + 1}`}:
-                    </span>
-                    <div style={{ display: "flex", gap: "6px", flexWrap: "wrap" }}>
-                      {TOKENS.map((token) => {
-                        const isUsedByPlayer = playerToken === token;
-                        const isUsedByOtherAI = aiTokens.some((t, i) => t === token && i !== index);
-                        const isDisabled = isUsedByPlayer || isUsedByOtherAI;
-                        return (
-                          <motion.button
-                            key={token}
-                            onClick={() => !isDisabled && handleAiTokenSelect(index, token)}
-                            whileHover={{ scale: isDisabled ? 1 : 1.1 }}
-                            whileTap={{ scale: isDisabled ? 1 : 0.95 }}
-                            style={{
-                              fontSize: "20px",
-                              padding: "6px",
-                              borderRadius: "6px",
-                              border: aiTokens[index] === token ? "2px solid #FF9800" : "1px solid #ddd",
-                              backgroundColor: aiTokens[index] === token ? "#ffe0b2" : isDisabled ? "#f5f5f5" : "#fff",
-                              cursor: isDisabled ? "not-allowed" : "pointer",
-                              opacity: isDisabled ? 0.3 : 1,
-                            }}
-                          >
-                            {token}
-                          </motion.button>
-                        );
-                      })}
+                    <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+                      <span style={{ fontWeight: "500", fontSize: "12px", color: "var(--gold-light)", fontFamily: "var(--font-heading)", letterSpacing: "1px" }}>
+                        {AI_NAMES[index] ?? `Bot ${index + 1}`}
+                      </span>
+                      <div style={{ display: "flex", gap: "4px", flexWrap: "wrap", justifyContent: "center" }}>
+                        {TOKENS.map((token) => {
+                          const isUsedByPlayer = playerToken === token;
+                          const isUsedByOtherAI = aiTokens.some((t, i) => t === token && i !== index);
+                          const isDisabled = isUsedByPlayer || isUsedByOtherAI;
+                          return (
+                            <motion.button
+                              key={token}
+                              onClick={() => !isDisabled && handleAiTokenSelect(index, token)}
+                              whileHover={{ scale: isDisabled ? 1 : 1.1 }}
+                              whileTap={{ scale: isDisabled ? 1 : 0.95 }}
+                              style={{
+                                fontSize: "16px",
+                                padding: "4px",
+                                width: "32px",
+                                height: "32px",
+                                borderRadius: "2px",
+                                border: aiTokens[index] === token ? "2px solid var(--gold-primary)" : "1px solid var(--gold-dark)",
+                                backgroundColor: aiTokens[index] === token ? "var(--charcoal)" : "var(--obsidian)",
+                                cursor: isDisabled ? "not-allowed" : "pointer",
+                                opacity: isDisabled ? 0.3 : 1,
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center"
+                              }}
+                            >
+                              {token}
+                            </motion.button>
+                          );
+                        })}
+                      </div>
                     </div>
-                  </div>
-                </motion.div>
-              ))}
-            </AnimatePresence>
+                  </motion.div>
+                ))}
+              </AnimatePresence>
+            </div>
           </div>
 
           <motion.button
+            className="button action-button"
             onClick={startSinglePlayerGame}
             disabled={!playerToken || aiTokens.some((t) => !t)}
             whileHover={{ scale: playerToken && aiTokens.every((t) => t) ? 1.05 : 1 }}
             whileTap={{ scale: playerToken && aiTokens.every((t) => t) ? 0.95 : 1 }}
             style={{
-              padding: "16px 48px",
-              fontSize: "20px",
-              fontWeight: "bold",
-              backgroundColor: playerToken && aiTokens.every((t) => t) ? "#2E8B57" : "#ccc",
-              color: "#fff",
-              border: "none",
-              borderRadius: "8px",
-              cursor: playerToken && aiTokens.every((t) => t) ? "pointer" : "not-allowed",
-              boxShadow: "0 4px 12px rgba(46, 139, 87, 0.4)",
+              padding: "12px 32px",
+              fontSize: "16px",
+              width: "100%",
+              marginTop: "8px"
             }}
           >
-            Start Game
+            ENTER THE GAME
           </motion.button>
         </motion.div>
       </div>
@@ -495,20 +470,18 @@ const PlayerSetup = () => {
           alignItems: "center",
           justifyContent: "center",
           minHeight: "100vh",
-          backgroundColor: "#1a1a2a",
+          background: "transparent",
           padding: "40px",
           gap: "24px",
         }}
       >
         <motion.div
+          className="deco-modal deco-border"
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           style={{
-            backgroundColor: "rgba(255, 255, 255, 0.95)",
-            borderRadius: "16px",
             padding: "40px",
-            boxShadow: "0 8px 32px rgba(0, 0, 0, 0.3)",
             textAlign: "center",
             maxWidth: "650px",
             width: "100%",
@@ -517,51 +490,50 @@ const PlayerSetup = () => {
           }}
         >
           <button
+            className="button"
             onClick={() => setGameMode("select")}
             style={{
               position: "absolute",
               top: "16px",
               left: "16px",
-              background: "none",
-              border: "none",
-              fontSize: "24px",
-              cursor: "pointer",
-              padding: "8px",
+              fontSize: "16px",
+              padding: "8px 16px",
             }}
           >
-            ←
+            BACK
           </button>
 
           <h1
+            className="deco-title"
             style={{
-              fontSize: "28px",
-              color: "#4169E1",
-              marginBottom: "24px",
+              fontSize: "32px",
+              marginBottom: "32px",
+              marginTop: "20px"
             }}
           >
-            Multiplayer Setup
+            High Roller Suite
           </h1>
 
           {/* Human Players */}
           <div
             style={{
-              marginBottom: "24px",
-              padding: "20px",
-              backgroundColor: "#e8f0fe",
-              borderRadius: "12px",
-              border: "2px solid #4169E1",
+              marginBottom: "32px",
+              padding: "24px",
+              backgroundColor: "var(--charcoal)",
+              borderRadius: "2px",
+              border: "1px solid var(--gold-dark)",
             }}
           >
-            <h3 style={{ marginBottom: "12px", color: "#4169E1" }}>Human Players</h3>
+            <h3 className="deco-title" style={{ marginBottom: "16px", fontSize: "20px" }}>VIP Guests</h3>
             
-            <div style={{ marginBottom: "16px" }}>
-              <label style={{ display: "block", marginBottom: "4px", fontWeight: "bold" }}>
-                Number of Human Players:
+            <div style={{ marginBottom: "20px" }}>
+              <label style={{ display: "block", marginBottom: "8px", fontWeight: "500", fontSize: "12px", textAlign: "left", color: "var(--ivory)", letterSpacing: "1px", textTransform: "uppercase" }}>
+                Number of Guests:
               </label>
               <select
                 value={humanCount}
                 onChange={handleHumanCountChange}
-                style={{ width: "100%", padding: "10px", borderRadius: "8px", border: "1px solid #ccc" }}
+                style={{ width: "100%", boxSizing: "border-box", backgroundColor: "var(--obsidian)" }}
               >
                 {[2, 3, 4].map(num => (
                   <option key={num} value={num}>{num} Players</option>
@@ -571,30 +543,31 @@ const PlayerSetup = () => {
 
             <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
               {Array.from({ length: humanCount }).map((_, index) => (
-                <div key={index} style={{ padding: "12px", background: "#fff", borderRadius: "8px", border: "1px solid #ccc" }}>
-                  <div style={{ marginBottom: "8px" }}>
-                    <label style={{ fontSize: "12px", fontWeight: "bold" }}>Player {index + 1} Name:</label>
+                <div key={index} style={{ padding: "16px", background: "var(--obsidian)", borderRadius: "2px", border: "1px solid var(--gold-dark)" }}>
+                  <div style={{ marginBottom: "12px" }}>
+                    <label style={{ fontSize: "12px", fontWeight: "500", color: "var(--gold-light)", fontFamily: "var(--font-heading)", letterSpacing: "1px" }}>Guest {index + 1} Alias:</label>
                     <input
                       type="text"
                       value={humanNames[index]}
                       onChange={(e) => handleHumanNameChange(index, e.target.value)}
-                      style={{ width: "100%", padding: "6px", borderRadius: "4px", border: "1px solid #ddd", marginTop: "4px" }}
+                      style={{ width: "100%", marginTop: "8px", boxSizing: "border-box" }}
                     />
                   </div>
                   <div>
-                    <label style={{ fontSize: "12px", fontWeight: "bold", display: "block", marginBottom: "4px" }}>Token:</label>
-                    <div style={{ display: "flex", gap: "6px", flexWrap: "wrap" }}>
+                    <label style={{ fontSize: "12px", fontWeight: "500", display: "block", marginBottom: "8px", color: "var(--gold-light)", fontFamily: "var(--font-heading)", letterSpacing: "1px" }}>Token:</label>
+                    <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
                       {getMultiplayerAvailableTokens("human", index).map(token => (
                         <button
                           key={token}
                           onClick={() => handleHumanTokenSelect(index, token)}
                           style={{
-                            fontSize: "20px",
-                            padding: "6px",
-                            borderRadius: "6px",
-                            border: humanTokens[index] === token ? "2px solid #4169E1" : "1px solid #ddd",
-                            backgroundColor: humanTokens[index] === token ? "#e8f0fe" : "#fff",
+                            fontSize: "24px",
+                            padding: "8px",
+                            borderRadius: "2px",
+                            border: humanTokens[index] === token ? "2px solid var(--gold-primary)" : "1px solid var(--gold-dark)",
+                            backgroundColor: humanTokens[index] === token ? "var(--charcoal)" : "var(--obsidian)",
                             cursor: "pointer",
+                            filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.5))"
                           }}
                         >
                           {token}
@@ -610,23 +583,23 @@ const PlayerSetup = () => {
           {/* AI Opponents */}
           <div
             style={{
-              marginBottom: "24px",
-              padding: "20px",
-              backgroundColor: "#fff3e0",
-              borderRadius: "12px",
-              border: "2px solid #FF9800",
+              marginBottom: "32px",
+              padding: "24px",
+              backgroundColor: "var(--charcoal)",
+              borderRadius: "2px",
+              border: "1px solid var(--gold-dark)",
             }}
           >
-            <h3 style={{ marginBottom: "12px", color: "#E65100" }}>Add AI Opponents (Optional)</h3>
+            <h3 className="deco-title" style={{ marginBottom: "16px", fontSize: "20px" }}>The House (AI)</h3>
             
-            <div style={{ marginBottom: "16px" }}>
-              <label style={{ display: "block", marginBottom: "4px", fontWeight: "bold" }}>
-                Number of AI Bots:
+            <div style={{ marginBottom: "20px" }}>
+              <label style={{ display: "block", marginBottom: "8px", fontWeight: "500", fontSize: "12px", textAlign: "left", color: "var(--ivory)", letterSpacing: "1px", textTransform: "uppercase" }}>
+                Add House Players:
               </label>
               <select
                 value={mpAiCount}
                 onChange={handleMpAiCountChange}
-                style={{ width: "100%", padding: "10px", borderRadius: "8px", border: "1px solid #ccc" }}
+                style={{ width: "100%", boxSizing: "border-box", backgroundColor: "var(--obsidian)" }}
               >
                 {[0, 1, 2, 3, 4, 5, 6].map(num => (
                   <option key={num} value={num}>{num} Bots</option>
@@ -641,24 +614,25 @@ const PlayerSetup = () => {
                   initial={{ opacity: 0, height: 0 }}
                   animate={{ opacity: 1, height: "auto" }}
                   exit={{ opacity: 0, height: 0 }}
-                  style={{ marginBottom: "12px", padding: "12px", backgroundColor: "#fff", borderRadius: "8px", border: "1px solid #ddd" }}
+                  style={{ marginBottom: "12px", padding: "16px", backgroundColor: "var(--obsidian)", borderRadius: "2px", border: "1px solid var(--gold-dark)" }}
                 >
-                  <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-                    <span style={{ fontWeight: "bold", fontSize: "14px", minWidth: "80px" }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
+                    <span style={{ fontWeight: "500", fontSize: "14px", minWidth: "90px", color: "var(--gold-light)", fontFamily: "var(--font-heading)", letterSpacing: "1px" }}>
                       {AI_NAMES[index] ?? `Bot ${index + 1}`}:
                     </span>
-                    <div style={{ display: "flex", gap: "6px", flexWrap: "wrap" }}>
+                    <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
                       {getMultiplayerAvailableTokens("ai", index).map(token => (
                         <button
                           key={token}
                           onClick={() => handleMpAiTokenSelect(index, token)}
                           style={{
-                            fontSize: "20px",
-                            padding: "6px",
-                            borderRadius: "6px",
-                            border: mpAiTokens[index] === token ? "2px solid #FF9800" : "1px solid #ddd",
-                            backgroundColor: mpAiTokens[index] === token ? "#ffe0b2" : "#fff",
+                            fontSize: "24px",
+                            padding: "8px",
+                            borderRadius: "2px",
+                            border: mpAiTokens[index] === token ? "2px solid var(--gold-primary)" : "1px solid var(--gold-dark)",
+                            backgroundColor: mpAiTokens[index] === token ? "var(--charcoal)" : "var(--obsidian)",
                             cursor: "pointer",
+                            filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.5))"
                           }}
                         >
                           {token}
@@ -672,24 +646,19 @@ const PlayerSetup = () => {
           </div>
 
           <motion.button
+            className="button action-button"
             onClick={startMultiplayerGame}
             disabled={humanTokens.some(t => !t) || mpAiTokens.some(t => !t)}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             style={{
               padding: "16px 48px",
-              fontSize: "20px",
-              fontWeight: "bold",
-              backgroundColor: "#4169E1",
-              color: "#fff",
-              border: "none",
-              borderRadius: "8px",
-              cursor: (humanTokens.some(t => !t) || mpAiTokens.some(t => !t)) ? "not-allowed" : "pointer",
-              boxShadow: "0 4px 12px rgba(65, 105, 225, 0.4)",
+              fontSize: "18px",
+              width: "100%",
               opacity: (humanTokens.some(t => !t) || mpAiTokens.some(t => !t)) ? 0.5 : 1,
             }}
           >
-            Start Multiplayer Game
+            ENTER THE GAME
           </motion.button>
         </motion.div>
       </div>

@@ -1,184 +1,193 @@
-body {
-  font-family: Arial, sans-serif;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  min-height: 100vh;
+:root {
+  --obsidian: #0f1012;
+  --charcoal: #1e1e24;
+  --gold-primary: #D4AF37;
+  --gold-light: #F3E5AB;
+  --gold-dark: #aa8c2c;
+  --gold-gradient: linear-gradient(135deg, #BF953F, #FCF6BA, #B38728, #FBF5B7, #AA771C);
+  --gold-metallic: linear-gradient(180deg, #F3E5AB 0%, #D4AF37 50%, #B38728 100%);
+  --emerald: #0b4528;
+  --emerald-dark: #041f13;
+  --ruby: #7a1010;
+  --ivory: #FDFBF7;
+  --ivory-dark: #e8e3d5;
+  --card-bg: rgba(30, 30, 36, 0.95);
+  
+  /* Property Colors Art Deco style */
+  --prop-brown: #5c3a21;
+  --prop-lightblue: #598b9e;
+  --prop-pink: #9e4b77;
+  --prop-orange: #b0621f;
+  --prop-red: #8f1717;
+  --prop-yellow: #a88c27;
+  --prop-green: #1a5e35;
+  --prop-darkblue: #1b3870;
+
+  --font-heading: 'Cormorant Garamond', serif;
+  --font-body: 'Montserrat', sans-serif;
 }
 
+body {
+  font-family: var(--font-body);
+  background: radial-gradient(circle at center, var(--charcoal) 0%, var(--obsidian) 100%);
+  color: var(--ivory);
+  min-height: 100vh;
+  margin: 0;
+  overflow: hidden; /* Prevent body scroll, use grid layout scrolling */
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+/* Elegant Buttons */
+.button, button {
+  font-family: var(--font-body);
+  padding: 12px 24px;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  background: var(--charcoal);
+  color: var(--gold-primary);
+  border: 1px solid var(--gold-primary);
+  border-radius: 2px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.button::before, button::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: var(--gold-primary);
+  z-index: -1;
+  transform: scaleY(0);
+  transform-origin: bottom;
+  transition: transform 0.3s ease;
+}
+
+.button:hover, button:hover {
+  color: var(--obsidian);
+}
+
+.button:hover::before, button:hover::before {
+  transform: scaleY(1);
+}
+
+.button:disabled, button:disabled {
+  background: #333;
+  color: #666;
+  border-color: #444;
+  cursor: not-allowed;
+}
+
+.button:disabled::before, button:disabled::before {
+  display: none;
+}
+
+/* Primary actions specifically */
+.action-button {
+  background: var(--gold-primary);
+  color: var(--obsidian);
+}
+.action-button:hover {
+  background: var(--gold-light);
+  box-shadow: 0 0 15px rgba(212, 175, 55, 0.4);
+}
+
+/* High-end inputs */
+input[type="text"], input[type="number"], select {
+  font-family: var(--font-body);
+  background: transparent;
+  border: 1px solid var(--gold-dark);
+  color: var(--ivory);
+  padding: 10px 16px;
+  border-radius: 2px;
+  font-size: 14px;
+  letter-spacing: 1px;
+}
+input:focus, select:focus {
+  outline: none;
+  border-color: var(--gold-light);
+  box-shadow: 0 0 8px rgba(212, 175, 55, 0.2);
+}
+
+/* Custom Scrollbars */
+::-webkit-scrollbar {
+  width: 4px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(212, 175, 55, 0.3);
+  border-radius: 2px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--gold-primary);
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Base structural classes */
 #root {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 20px;
-  padding: 40px;
+  padding: 0;
+  height: 100vh;
 }
 
-.space {
-  position: absolute;
-  width: 80px;
-  height: 80px;
-  left: var(--left, 0px);
-  top: var(--top, 0px);
-  background: var(--bg, #f0f0f0);
-  border: 1px solid #333;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 10px;
-  font-weight: bold;
-  color: #333;
-  border-radius: 4px;
-  padding: 2px;
-  text-align: center;
-  word-break: break-word;
+/* Modal styling base */
+.deco-modal {
+  background: var(--card-bg) !important;
+  border: 2px solid var(--gold-primary) !important;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.8), inset 0 0 0 1px var(--gold-dark), inset 0 0 20px rgba(212,175,55,0.1) !important;
+  color: var(--ivory) !important;
 }
 
-.space-name {
-  font-size: 9px;
-}
-
-.space-price {
-  font-size: 8px;
-  margin-top: 2px;
-}
-
-.board-container {
+/* Art deco borders */
+.deco-border {
+  border: 1px solid var(--gold-primary);
   position: relative;
-  width: calc(11 * 84px);
-  height: calc(11 * 84px);
-  background: #2E8B57;
-  border-radius: 8px;
-  padding: 20px;
-  margin: 20px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  padding: 16px;
 }
-
-.center-panel {
+.deco-border::before, .deco-border::after {
+  content: '';
   position: absolute;
-  top: calc(84px + 4px);
-  left: calc(84px + 4px);
-  right: calc(84px + 4px);
-  bottom: calc(84px + 4px);
-  background: rgba(255, 255, 255, 0.95);
-  border-radius: 8px;
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+  width: 10px;
+  height: 10px;
+  border: 1px solid var(--gold-light);
+}
+.deco-border::before {
+  top: -4px; left: -4px;
+  border-right: none; border-bottom: none;
+}
+.deco-border::after {
+  bottom: -4px; right: -4px;
+  border-left: none; border-top: none;
 }
 
-.game-info {
-  font-size: 14px;
-  font-weight: bold;
-  color: #333;
-}
-
-.player-row {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 12px;
-  opacity: 1;
-  transition: opacity 0.3s;
-}
-
-.player-row.bankrupt {
-  opacity: 0.5;
-}
-
-.player-token {
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  border: 2px solid #333;
-}
-
-.player-jail {
-  color: red;
-}
-
-.controls-panel {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background: rgba(0, 0, 0, 0.9);
-  padding: 32px;
-  border-radius: 12px;
+/* Title text */
+.deco-title {
+  color: var(--gold-primary);
   text-align: center;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
-  z-index: 1000;
-  min-width: 300px;
-  color: #fff;
+  text-shadow: 0 2px 10px rgba(212,175,55,0.3);
 }
 
-.action-panel {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  background: rgba(0, 0, 0, 0.95);
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
-  max-width: 400px;
-  color: #fff;
-  text-align: center;
-}
-
-.game-title {
-  font-size: 24px;
-  color: #333;
-  margin-bottom: 8px;
-}
-
-.game-message {
-  font-size: 18px;
-  margin-bottom: 12px;
-  color: #ccc;
-}
-
-.button {
-  padding: 12px 24px;
-  font-size: 16px;
-  background: #4CAF50;
-  color: #fff;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: bold;
-}
-
-.button:hover {
-  background: #45a049;
-}
-
-.button:disabled {
-  background: #ccc;
-  cursor: not-allowed;
-}
-
-.action-button {
-  background: #FF9800;
-  color: #fff;
-  margin-top: 8px;
-}
-
-.secondary-button {
-  background: #2196F3;
-}
-
-.jail-button {
-  background: #2196F3;
-}
-
-.passed-go {
-  color: #4CAF50;
-  font-weight: bold;
-  margin-top: 16px;
-  animation: pulse 1s ease-in-out;
-}
-
-@keyframes pulse {
-  0% { opacity: 1; transform: scale(1); }
-  50% { opacity: 1; transform: scale(1.05); }
-  100% { opacity: 0; transform: scale(1); }
+/* Overriding any React inline background that clashes */
+.bg-override {
+  background-color: transparent !important;
 }

@@ -162,7 +162,59 @@ export const useGameStore = create<GameStore>((set, get) => ({
   ].reduce((acc, action) => {
     acc[action] = (...args: any[]) => {
       if (socket && socket.readyState === WebSocket.OPEN) {
-        socket.send(JSON.stringify({ type: "ACTION", action, payload: args }));
+        try {
+          // Debug logging for trade actions
+          if (action === 'proposeTrade' || action === 'updateTradeOffer') {
+            console.log(`Sending ${action}:`, JSON.stringify(args, null, 2));
+          }
+          
+          // Sanitize args - only allow primitives and simple objects
+          const sanitizedArgs = args.map(arg => {
+            if (arg === null || arg === undefined) return arg;
+            if (typeof arg === 'number' || typeof arg === 'string' || typeof arg === 'boolean') return arg;
+            // For arrays, extract primitives only
+            if (Array.isArray(arg)) {
+              return arg.map(item => {
+                if (typeof item === 'string' || typeof item === 'number' || typeof item === 'boolean') {
+                  return item;
+                }
+                if (item === null || item === undefined) {
+                  return item;
+                }
+                // For objects in arrays, extract key-value pairs
+                return Object.keys(item).reduce((acc, key) => {
+                  const val = item[key];
+                  if (typeof val === 'string' || typeof val === 'number' || typeof val === 'boolean' || val === null) {
+                    acc[key] = val;
+                  }
+                  return acc;
+                }, {} as any);
+              });
+            }
+            if (typeof arg === 'object') {
+              // Extract properties from objects, including nested arrays of primitives
+              return Object.keys(arg).reduce((acc, key) => {
+                const val = arg[key];
+                if (typeof val === 'string' || typeof val === 'number' || typeof val === 'boolean' || val === null) {
+                  acc[key] = val;
+                } else if (Array.isArray(val) && val.every(item => typeof item === 'number' || typeof item === 'string')) {
+                  // Allow arrays of primitives (like property IDs)
+                  acc[key] = val;
+                }
+                return acc;
+              }, {} as any);
+            }
+            return arg;
+          });
+          socket.send(JSON.stringify({ type: "ACTION", action, payload: sanitizedArgs }));
+          
+          // Debug logging for trade actions
+          if (action === 'proposeTrade' || action === 'updateTradeOffer') {
+            console.log(`Sent ${action} with sanitized data:`, JSON.stringify(sanitizedArgs, null, 2));
+          }
+        } catch (e) {
+          console.error(`Failed to send action ${action}:`, e, args);
+        }
       } else {
         console.warn("Socket not connected, action ignored:", action);
       }

@@ -1,13 +1,11 @@
-import React from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useGameStore } from "../store/gameStore";
 import { getSpacePosition, SPACE_SIZE, BOARD_PADDING } from "./Board";
 
-// Calculate pixel position for a token on the board
 const getTokenPixelPosition = (playerIndex: number, position: number, totalPlayers: number) => {
   const spacePos = getSpacePosition(position);
   
-  // Calculate offset within the space for multiple players
   const row = Math.floor(playerIndex / 2);
   const col = playerIndex % 2;
   const offsetX = 10 + col * 28;
@@ -19,48 +17,96 @@ const getTokenPixelPosition = (playerIndex: number, position: number, totalPlaye
   };
 };
 
-export const PlayerToken = ({ playerIndex }: { playerIndex: number }) => {
+const PlayerToken = ({ playerIndex }: { playerIndex: number }) => {
   const player = useGameStore((s: any) => s.players[playerIndex]);
   const totalPlayers = useGameStore((s: any) => s.players.length);
+  
+  const [currentPosition, setCurrentPosition] = useState(player?.position ?? 0);
+  const [isAnimating, setIsAnimating] = useState(false);
+  const prevPositionRef = useRef(player?.position ?? 0);
+
+  useEffect(() => {
+    if (!player) return;
+    
+    const targetPosition = player.position;
+    const startPosition = prevPositionRef.current;
+    
+    if (targetPosition !== startPosition && !isAnimating) {
+      setIsAnimating(true);
+      
+      // Calculate steps - wrap around at 40 (Go is at 0)
+      const totalSpaces = 40;
+      let steps: number[] = [];
+      
+      if (targetPosition > startPosition) {
+        // Moving forward
+        for (let i = startPosition; i <= targetPosition; i++) {
+          steps.push(i);
+        }
+      } else if (targetPosition < startPosition) {
+        // Wrapping around past GO
+        for (let i = startPosition; i < totalSpaces; i++) {
+          steps.push(i);
+        }
+        for (let i = 0; i <= targetPosition; i++) {
+          steps.push(i);
+        }
+      }
+      
+      // Animate through each step
+      let stepIndex = 0;
+      const animateStep = () => {
+        if (stepIndex < steps.length) {
+          setCurrentPosition(steps[stepIndex]);
+          stepIndex++;
+          setTimeout(animateStep, 80); // 80ms per step
+        } else {
+          setIsAnimating(false);
+          prevPositionRef.current = targetPosition;
+        }
+      };
+      
+      animateStep();
+    }
+  }, [player?.position, isAnimating]);
 
   if (!player || player.bankrupt) return null;
 
-  const { x, y } = getTokenPixelPosition(playerIndex, player.position, totalPlayers);
+  const { x, y } = getTokenPixelPosition(playerIndex, currentPosition, totalPlayers);
+  const isMoving = isAnimating;
 
   return (
     <motion.div
       style={{
         position: "absolute",
-        width: "28px",
-        height: "28px",
+        width: "32px",
+        height: "32px",
         borderRadius: "50%",
-        background: `radial-gradient(circle at 30% 30%, ${player.color}, #000)`,
-        border: "2px solid #fff",
+        background: `radial-gradient(circle at 30% 30%, var(--gold-light), ${player.color}, var(--obsidian))`,
+        border: "2px solid var(--gold-primary)",
         boxShadow: `
-          0 4px 6px rgba(0, 0, 0, 0.4),
-          inset 0 -4px 4px rgba(0,0,0,0.2),
-          inset 0 4px 4px rgba(255,255,255,0.4)
+          0 6px 10px rgba(0, 0, 0, 0.6),
+          inset 0 -2px 5px rgba(0,0,0,0.4),
+          inset 0 2px 5px rgba(255,255,255,0.6)
         `,
         zIndex: 50 + playerIndex,
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        fontSize: "16px",
+        fontSize: "18px",
         cursor: "pointer",
       }}
-      initial={{ x, y, scale: 0 }}
       animate={{ 
         x, 
-        y, 
-        scale: 1,
+        y,
+        scale: isMoving ? [1, 1.15, 1] : 1,
       }}
       transition={{ 
-        type: "spring", 
-        stiffness: 120, 
-        damping: 14,
-        mass: 0.8,
+        x: { type: "spring", stiffness: 300, damping: 25, mass: 0.5 },
+        y: { type: "spring", stiffness: 300, damping: 25, mass: 0.5 },
+        scale: { duration: 0.15 }
       }}
-      whileHover={{ scale: 1.2, zIndex: 100 }}
+      whileHover={{ scale: 1.2, zIndex: 100, boxShadow: "0 0 15px var(--gold-primary)" }}
       title={`${player.name} - £${player.cash}`}
     >
       <span style={{ filter: "drop-shadow(0 2px 2px rgba(0,0,0,0.5))" }}>
